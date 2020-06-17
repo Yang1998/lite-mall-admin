@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yyt.axios.mapper.GoodsMapper">
+
+    <sql id="goodsSql">
+        goods_id, goods_name, goods_price, goods_number, goods_weight,
+        cat_id, goods_introduce, goods_big_logo, goods_small_logo, is_del,
+        add_time, upd_time, delete_time, cat_one_id, cat_two_id, cat_three_id,
+        hot_number, is_promote, goods_state
+    </sql>
+
+    <!--  sg对应sp_goods; sgp对应sp_goods_pics; spa 对应 sp_goods_attr;  sa 对应 sp_attribute-->
+    <sql id="goodsDetailSql">
+        sg.goods_id, sg.goods_name, sg.goods_price, sg.goods_number, sg.goods_weight,
+        sg.cat_id, sg.goods_introduce, sg.goods_big_logo, sg.goods_small_logo, sg.is_del,
+        sg.add_time, sg.upd_time, sg.delete_time, sg.cat_one_id, sg.cat_two_id, sg.cat_three_id,
+        sg.hot_number, sg.is_promote, sg.goods_state, sgp.pics_id, sgp.pics_big, sgp.pics_mid,
+        sgp.pics_sma, sga.attr_id, sga.attr_value, sga.add_price, sa.attr_name, sa.attr_sel,
+        sa.attr_write, sa.attr_vals
+    </sql>
+
+    <select id="getAllGoods" resultType="com.yyt.axios.entity.GoodsPO">
+        select
+        <include refid="goodsSql"/>
+        from sp_goods
+        <where>
+            <if test="query != null">
+                goods_name like "%"#{query}"%"
+            </if>
+            and delete_time is null
+        </where>
+    </select>
+
+    <insert id="addGoods" useGeneratedKeys="true" keyProperty="goods.id">
+        insert ignore into sp_goods (goods_name, goods_price, goods_number, goods_weight, cat_id, goods_introduce,
+                                     add_time, upd_time, cat_one_id, cat_two_id, cat_three_id)
+        values (#{goods.goods_name}, #{goods.goods_price}, #{goods.goods_number}, #{goods.goods_weight},
+                #{one_id}, #{goods.goods_introduce}, unix_timestamp(), unix_timestamp(), #{one_id},
+                #{two_id}, #{three_id})
+    </insert>
+
+    <resultMap id="goodsDetailMap" type="com.yyt.axios.entity.GoodsDetailPO">
+        <association property="goods" javaType="com.yyt.axios.entity.GoodsPO">
+            <id column="goods_id" property="goods_id"/>
+            <result column="goods_name" property="goods_name"/>
+            <result column="goods_price" property="goods_price"/>
+            <result column="goods_number" property="goods_number"/>
+            <result column="goods_weight" property="goods_weight"/>
+            <result column="cat_id" property="cat_id"/>
+            <result column="goods_introduce" property="goods_introduce"/>
+            <result column="goods_big_logo" property="goods_big_logo"/>
+            <result column="goods_small_logo" property="goods_small_logo"/>
+            <result column="is_del" property="is_del"/>
+            <result column="add_time" property="add_time"/>
+            <result column="upd_time" property="upd_time"/>
+            <result column="delete_time" property="delete_time"/>
+            <result column="cat_one_id" property="cat_one_id"/>
+            <result column="cat_two_id" property="cat_two_id"/>
+            <result column="cat_three_id" property="cat_three_id"/>
+            <result column="hot_number" property="hot_number"/>
+            <result column="is_promote" property="is_promote"/>
+            <result column="goods_state" property="goods_state"/>
+        </association>
+        <association property="goodsPics" javaType="com.yyt.axios.entity.GoodsPicsPO">
+            <id column="pics_id" property="pics_id"/>
+            <result column="goods_id" property="goods_id"/>
+            <result column="pics_big" property="pics_big"/>
+            <result column="pics_mid" property="pics_mid"/>
+            <result column="pics_sma" property="pics_sma"/>
+        </association>
+        <association property="goodsAttrs" javaType="com.yyt.axios.entity.GoodsAttr">
+            <result column="goods_id" property="goods_id"/>
+            <result column="attr_id" property="attr_id"/>
+            <result column="attr_value" property="attr_value"/>
+            <result column="add_price" property="add_price"/>
+            <result column="attr_name" property="attr_name"/>
+            <result column="attr_sel" property="attr_sel"/>
+            <result column="attr_write" property="attr_write"/>
+            <result column="attr_vals" property="attr_vals"/>
+        </association>
+    </resultMap>
+
+
+    <select id="getGoodsDetail" resultMap="goodsDetailMap">
+        select<include refid="goodsDetailSql"/>
+        from sp_goods sg
+        left join sp_goods_pics sgp on sg.goods_id = sgp.goods_id
+        left join sp_goods_attr sga on sg.goods_id = sga.goods_id
+        left join sp_attribute sa on sga.attr_id = sa.attr_id and sg.cat_id = sa.cat_id
+        where sg.goods_id = #{gid} and sg.delete_time is null
+    </select>
+
+    <update id="deleteGoodsById">
+        update sp_goods set delete_time = UNIX_TIMESTAMP() where goods_id = #{id}
+    </update>
+</mapper>

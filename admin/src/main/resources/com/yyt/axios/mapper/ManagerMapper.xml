@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yyt.axios.mapper.ManagerMapper">
+
+    <resultMap id="managerMap" type="com.yyt.axios.entity.ManagerPO">
+        <id property="id" column="mg_id"/>
+        <result property="name" column="mg_name"/>
+        <result property="pwd" column="mg_pwd"/>
+        <result property="time" column="mg_time"/>
+        <result property="roleId" column="role_id"/>
+        <result property="mobile" column="mg_mobile"/>
+        <result property="email" column="mg_email"/>
+        <result property="state" column="mg_state"/>
+        <result property="salt" column="mg_salt"/>
+    </resultMap>
+
+    <select id="getManagerByName" resultMap="managerMap">
+        select mg_id, mg_name, mg_pwd, mg_salt, mg_time, role_id, mg_mobile, mg_email, mg_state
+        from sp_manager
+        where mg_name = #{name}
+    </select>
+
+    <select id="getAllManagers" resultMap="managerMap">
+        select mg_id, mg_name, mg_pwd, mg_time, role_id, mg_mobile, mg_email, mg_state
+        from sp_manager
+        <where>
+            <if test="query != null">
+                mg_name like "%"#{query}"%"
+            </if>
+        </where>
+    </select>
+    
+    <select id="getManagerById" resultMap="managerMap">
+        select mg_id, mg_name, mg_pwd, mg_time, role_id, mg_mobile, mg_email, mg_state
+        from sp_manager
+        where mg_id = #{uid}
+    </select>
+
+    <update id="updateUserState">
+        update sp_manager
+        set mg_state = #{state}
+        where mg_id = #{uid}
+    </update>
+
+    <insert id="createUser" keyProperty="id" useGeneratedKeys="true">
+        insert into sp_manager values (null, #{manager.name}, #{manager.pwd}, #{manager.time},
+                                       #{manager.roleId}, #{manager.mobile}, #{manager.email},
+                                       #{manager.state})
+    </insert>
+
+    <update id="updateUserInfo">
+        update sp_manager
+        <trim prefix="set" suffixOverrides=",">
+            <if test="userInfo.email != null">
+                mg_email = #{userInfo.email},
+            </if>
+            <if test="userInfo.mobile != null">
+                mg_mobile = #{userInfo.mobile},
+            </if>
+        </trim>
+        where mg_id = #{uid}
+    </update>
+
+    <delete id="deleteUserById">
+        delete from sp_manager
+        where mg_id = #{uid}
+    </delete>
+
+    <update id="setRoleId">
+        update sp_manager
+        set role_id = #{rid}
+        where mg_id = #{id}
+    </update>
+</mapper>

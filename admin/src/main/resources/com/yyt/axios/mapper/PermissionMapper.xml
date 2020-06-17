@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yyt.axios.mapper.PermissionMapper">
+
+    <resultMap id="permissionMap" type="com.yyt.axios.entity.PermissionPO">
+        <result property="id" column="ps_id"/>
+        <result property="name" column="ps_name"/>
+        <result property="pid" column="ps_pid"/>
+        <result property="controller" column="ps_c"/>
+        <result property="method" column="ps_a"/>
+        <result property="level" column="ps_level"/>
+    </resultMap>
+
+    <select id="getPermissionListByPidLevel" resultMap="permissionMap">
+        select
+        ps_id, ps_name, ps_pid, ps_c, ps_a, ps_level
+        from sp_permission
+        <where>
+            <if test="id!=null">
+                ps_pid = #{id}
+            </if>
+            and ps_level = #{level}
+        </where>
+    </select>
+
+    <select id="getPathByPsid" resultType="string">
+        select ps_api_path
+        from sp_permission_api
+        where ps_id = #{psid}
+    </select>
+
+    <select id="getAllPermissions" resultType="com.yyt.axios.entity.RightsPO">
+        select p.ps_id        as id,
+               p.ps_name      as authName,
+               p.ps_pid       as pid,
+               p.ps_level     as level,
+               pa.ps_api_path as path
+        from sp_permission p
+                 left outer join
+             sp_permission_api pa
+             on p.ps_id = pa.ps_id
+    </select>
+
+    <select id="getPermissionsByIds" resultType="com.yyt.axios.entity.RightsPO">
+        select p.ps_id as id,
+        p.ps_name as authName,
+        p.ps_pid as pid,
+        p.ps_level as level,
+        pa.ps_api_path as path
+        from sp_permission p
+        left outer join
+        sp_permission_api pa
+        on p.ps_id = pa.ps_id
+        <where>
+            p.ps_id in
+            <foreach item="id" collection="ids" open="(" close=")" separator=",">
+                #{id}
+            </foreach>
+        </where>
+    </select>
+    <select id="getPermissionStrings" resultType="java.lang.String">
+        select concat(spa.ps_api_path, ':', sp.ps_a)
+        from mydb.sp_permission sp
+                 inner join mydb.sp_permission_api spa on sp.ps_id = spa.ps_id
+        where sp.ps_id in
+            <foreach collection="ids" open="(" close=")" item="id" separator=",">
+                #{id}
+            </foreach>
+        and sp.ps_a != '';
+    </select>
+</mapper>

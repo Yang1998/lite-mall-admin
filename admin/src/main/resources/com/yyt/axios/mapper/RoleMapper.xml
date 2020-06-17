@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yyt.axios.mapper.RoleMapper">
+    <resultMap id="roleMap" type="com.yyt.axios.entity.RolePO">
+        <id property="id" column="role_id"/>
+        <id property="roleName" column="role_name"/>
+        <id property="ids" column="ps_ids" typeHandler="com.yyt.axios.mybatis.typeHandler.StringListTypeHandler"/>
+        <id property="controller" column="ps_ca"/>
+        <id property="desc" column="role_desc"/>
+    </resultMap>
+
+    <sql id="roleSql">
+        role_id, role_name, ps_ids, ps_ca, role_desc
+    </sql>
+
+    <select id="getRoleNameByRoleId" resultType="string">
+        select role_name
+        from sp_role
+        where role_id = #{rid}
+    </select>
+
+    <select id="getAllRoles" resultMap="roleMap">
+        select
+        <include refid="roleSql"/>
+        from sp_role
+    </select>
+
+    <insert id="insertRole" keyProperty="id" useGeneratedKeys="true">
+        insert into sp_role (role_name, role_desc)
+        values (#{role.roleName}, #{role.roleDesc})
+    </insert>
+
+    <select id="getRoleById" resultMap="roleMap">
+        select
+        <include refid="roleSql"/>
+        from sp_role
+        where role_id = #{rid}
+    </select>
+
+    <update id="updateRole">
+        update sp_role
+        set role_name = #{role.roleName},
+             role_desc = #{role.roleDesc}
+        where role_id = #{rid}
+    </update>
+
+    <delete id="deleteRole">
+        delete from sp_role where role_id = #{rid}
+    </delete>
+
+    <update id="updateRoleIds">
+        update sp_role
+        set ps_ids = #{ids, typeHandler=com.yyt.axios.mybatis.typeHandler.StringListTypeHandler}
+        where role_id = #{rid}
+    </update>
+
+    <update id="allocateRoleIds">
+        update sp_role
+        set ps_ids = #{rids}
+        where role_id = #{rid}
+    </update>
+</mapper>

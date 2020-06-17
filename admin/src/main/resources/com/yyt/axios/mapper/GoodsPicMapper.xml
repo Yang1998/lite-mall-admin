@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yyt.axios.mapper.GoodsPicMapper">
+
+    <insert id="addGoodsPic">
+        insert into sp_goods_pics (goods_id, pics_big, pics_mid, pics_sma)
+        values
+        <foreach collection="pics" item="pic" close=";" separator=",">
+            (#{gid}, #{pic.pic},  #{pic.pic},  #{pic.pic})
+        </foreach>
+    </insert>
+</mapper>

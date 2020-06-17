@@ -1,0 +1,236 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yyt.axios.mapper.OrderMapper">
+  <resultMap id="BaseResultMap" type="com.yyt.axios.entity.OrderPO">
+    <id column="order_id" jdbcType="INTEGER" property="orderId" />
+    <result column="user_id" jdbcType="INTEGER" property="userId" />
+    <result column="order_number" jdbcType="VARCHAR" property="orderNumber" />
+    <result column="order_price" jdbcType="DECIMAL" property="orderPrice" />
+    <result column="order_pay" jdbcType="CHAR" property="orderPay" />
+    <result column="is_send" jdbcType="CHAR" property="isSend" />
+    <result column="trade_no" jdbcType="VARCHAR" property="tradeNo" />
+    <result column="order_fapiao_title" jdbcType="CHAR" property="orderFapiaoTitle" />
+    <result column="order_fapiao_company" jdbcType="VARCHAR" property="orderFapiaoCompany" />
+    <result column="order_fapiao_content" jdbcType="VARCHAR" property="orderFapiaoContent" />
+    <result column="pay_status" jdbcType="CHAR" property="payStatus" />
+    <result column="create_time" jdbcType="INTEGER" property="createTime" />
+    <result column="update_time" jdbcType="INTEGER" property="updateTime" />
+  </resultMap>
+  <resultMap extends="BaseResultMap" id="ResultMapWithBLOBs" type="com.yyt.axios.entity.OrderPO">
+    <result column="consignee_addr" jdbcType="LONGVARCHAR" property="consigneeAddr" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    order_id, user_id, order_number, order_price, order_pay, is_send, trade_no, order_fapiao_title, 
+    order_fapiao_company, order_fapiao_content, pay_status, create_time, update_time
+  </sql>
+  <sql id="Blob_Column_List">
+    consignee_addr
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="ResultMapWithBLOBs">
+    select 
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from sp_order
+    where order_id = #{orderId,jdbcType=INTEGER}
+  </select>
+
+    <select id="selectAllOrders" resultMap="ResultMapWithBLOBs">
+      select
+      <include refid="Base_Column_List" />
+      ,
+      <include refid="Blob_Column_List" />
+      from sp_order
+      <where>
+        <if test="query != null">
+            order_number like "%"#{query}"%"
+        </if>
+      </where>
+    </select>
+
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from sp_order
+    where order_id = #{orderId,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.yyt.axios.entity.OrderPO">
+    insert into sp_order (order_id, user_id, order_number, 
+      order_price, order_pay, is_send, 
+      trade_no, order_fapiao_title, order_fapiao_company, 
+      order_fapiao_content, pay_status, create_time, 
+      update_time, consignee_addr)
+    values (#{orderId,jdbcType=INTEGER}, #{userId,jdbcType=INTEGER}, #{orderNumber,jdbcType=VARCHAR}, 
+      #{orderPrice,jdbcType=DECIMAL}, #{orderPay,jdbcType=CHAR}, #{isSend,jdbcType=CHAR}, 
+      #{tradeNo,jdbcType=VARCHAR}, #{orderFapiaoTitle,jdbcType=CHAR}, #{orderFapiaoCompany,jdbcType=VARCHAR}, 
+      #{orderFapiaoContent,jdbcType=VARCHAR}, #{payStatus,jdbcType=CHAR}, #{createTime,jdbcType=INTEGER}, 
+      #{updateTime,jdbcType=INTEGER}, #{consigneeAddr,jdbcType=LONGVARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.yyt.axios.entity.OrderPO">
+    insert into sp_order
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="orderId != null">
+        order_id,
+      </if>
+      <if test="userId != null">
+        user_id,
+      </if>
+      <if test="orderNumber != null">
+        order_number,
+      </if>
+      <if test="orderPrice != null">
+        order_price,
+      </if>
+      <if test="orderPay != null">
+        order_pay,
+      </if>
+      <if test="isSend != null">
+        is_send,
+      </if>
+      <if test="tradeNo != null">
+        trade_no,
+      </if>
+      <if test="orderFapiaoTitle != null">
+        order_fapiao_title,
+      </if>
+      <if test="orderFapiaoCompany != null">
+        order_fapiao_company,
+      </if>
+      <if test="orderFapiaoContent != null">
+        order_fapiao_content,
+      </if>
+      <if test="payStatus != null">
+        pay_status,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+      <if test="updateTime != null">
+        update_time,
+      </if>
+      <if test="consigneeAddr != null">
+        consignee_addr,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="orderId != null">
+        #{orderId,jdbcType=INTEGER},
+      </if>
+      <if test="userId != null">
+        #{userId,jdbcType=INTEGER},
+      </if>
+      <if test="orderNumber != null">
+        #{orderNumber,jdbcType=VARCHAR},
+      </if>
+      <if test="orderPrice != null">
+        #{orderPrice,jdbcType=DECIMAL},
+      </if>
+      <if test="orderPay != null">
+        #{orderPay,jdbcType=CHAR},
+      </if>
+      <if test="isSend != null">
+        #{isSend,jdbcType=CHAR},
+      </if>
+      <if test="tradeNo != null">
+        #{tradeNo,jdbcType=VARCHAR},
+      </if>
+      <if test="orderFapiaoTitle != null">
+        #{orderFapiaoTitle,jdbcType=CHAR},
+      </if>
+      <if test="orderFapiaoCompany != null">
+        #{orderFapiaoCompany,jdbcType=VARCHAR},
+      </if>
+      <if test="orderFapiaoContent != null">
+        #{orderFapiaoContent,jdbcType=VARCHAR},
+      </if>
+      <if test="payStatus != null">
+        #{payStatus,jdbcType=CHAR},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=INTEGER},
+      </if>
+      <if test="updateTime != null">
+        #{updateTime,jdbcType=INTEGER},
+      </if>
+      <if test="consigneeAddr != null">
+        #{consigneeAddr,jdbcType=LONGVARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.yyt.axios.entity.OrderPO">
+    update sp_order
+    <set>
+      <if test="userId != null">
+        user_id = #{userId,jdbcType=INTEGER},
+      </if>
+      <if test="orderNumber != null">
+        order_number = #{orderNumber,jdbcType=VARCHAR},
+      </if>
+      <if test="orderPrice != null">
+        order_price = #{orderPrice,jdbcType=DECIMAL},
+      </if>
+      <if test="orderPay != null">
+        order_pay = #{orderPay,jdbcType=CHAR},
+      </if>
+      <if test="isSend != null">
+        is_send = #{isSend,jdbcType=CHAR},
+      </if>
+      <if test="tradeNo != null">
+        trade_no = #{tradeNo,jdbcType=VARCHAR},
+      </if>
+      <if test="orderFapiaoTitle != null">
+        order_fapiao_title = #{orderFapiaoTitle,jdbcType=CHAR},
+      </if>
+      <if test="orderFapiaoCompany != null">
+        order_fapiao_company = #{orderFapiaoCompany,jdbcType=VARCHAR},
+      </if>
+      <if test="orderFapiaoContent != null">
+        order_fapiao_content = #{orderFapiaoContent,jdbcType=VARCHAR},
+      </if>
+      <if test="payStatus != null">
+        pay_status = #{payStatus,jdbcType=CHAR},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=INTEGER},
+      </if>
+      <if test="updateTime != null">
+        update_time = #{updateTime,jdbcType=INTEGER},
+      </if>
+      <if test="consigneeAddr != null">
+        consignee_addr = #{consigneeAddr,jdbcType=LONGVARCHAR},
+      </if>
+    </set>
+    where order_id = #{orderId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.yyt.axios.entity.OrderPO">
+    update sp_order
+    set user_id = #{userId,jdbcType=INTEGER},
+      order_number = #{orderNumber,jdbcType=VARCHAR},
+      order_price = #{orderPrice,jdbcType=DECIMAL},
+      order_pay = #{orderPay,jdbcType=CHAR},
+      is_send = #{isSend,jdbcType=CHAR},
+      trade_no = #{tradeNo,jdbcType=VARCHAR},
+      order_fapiao_title = #{orderFapiaoTitle,jdbcType=CHAR},
+      order_fapiao_company = #{orderFapiaoCompany,jdbcType=VARCHAR},
+      order_fapiao_content = #{orderFapiaoContent,jdbcType=VARCHAR},
+      pay_status = #{payStatus,jdbcType=CHAR},
+      create_time = #{createTime,jdbcType=INTEGER},
+      update_time = #{updateTime,jdbcType=INTEGER},
+      consignee_addr = #{consigneeAddr,jdbcType=LONGVARCHAR}
+    where order_id = #{orderId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.yyt.axios.entity.OrderPO">
+    update sp_order
+    set user_id = #{userId,jdbcType=INTEGER},
+      order_number = #{orderNumber,jdbcType=VARCHAR},
+      order_price = #{orderPrice,jdbcType=DECIMAL},
+      order_pay = #{orderPay,jdbcType=CHAR},
+      is_send = #{isSend,jdbcType=CHAR},
+      trade_no = #{tradeNo,jdbcType=VARCHAR},
+      order_fapiao_title = #{orderFapiaoTitle,jdbcType=CHAR},
+      order_fapiao_company = #{orderFapiaoCompany,jdbcType=VARCHAR},
+      order_fapiao_content = #{orderFapiaoContent,jdbcType=VARCHAR},
+      pay_status = #{payStatus,jdbcType=CHAR},
+      create_time = #{createTime,jdbcType=INTEGER},
+      update_time = #{updateTime,jdbcType=INTEGER}
+    where order_id = #{orderId,jdbcType=INTEGER}
+  </update>
+</mapper>

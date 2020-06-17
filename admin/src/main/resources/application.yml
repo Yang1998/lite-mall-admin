@@ -1,0 +1,38 @@
+spring:
+  # 数据库配置
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/mydb?characterEncoding=utf8&useSSL=false&serverTimezone=Asia/Shanghai
+    username: root
+    password: 123456
+    # druid
+    type: com.alibaba.druid.pool.DruidDataSource
+    hikari:
+      maximum-pool-size: 20
+      connection-timeout: 30000
+      idle-timeout: 600000
+      max-lifetime: 1800000
+      minimum-idle: 10
+  # devtools热部署
+  devtools:
+    livereload:
+      enabled: true
+      port: 35739
+    restart:
+      enabled: true
+
+  profiles:
+    active: dev
+
+  aop:
+    auto: true # 启动aop配置
+    proxy-target-class: true
+
+logging:
+  level:
+    com.yyt.axios: info
+  config: classpath:logback-spring.xml
+#  file: G:/logs/app.log
+
+mybatis:
+  type-handlers-package: com.yyt.axios.mybatis.typeHandler

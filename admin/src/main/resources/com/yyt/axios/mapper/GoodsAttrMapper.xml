@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yyt.axios.mapper.GoodsAttrMapper">
+
+    <insert id="addGoodsAttr">
+        insert into sp_goods_attr
+        (goods_id, attr_id, attr_value, add_price)
+        values
+        <foreach collection="attrs" item="attr" separator="," close=";">
+            (#{gid}, #{attr.attr_id}, #{attr.attr_value}, 0.00)
+        </foreach>
+    </insert>
+</mapper>

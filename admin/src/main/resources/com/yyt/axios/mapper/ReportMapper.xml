@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yyt.axios.mapper.ReportMapper">
+    <resultMap id="areaMap" type="com.yyt.axios.entity.AreaReportPO">
+        <id column="id" property="id"/>
+        <result column="rp1_user_count" property="count"/>
+        <result column="rp1_area" property="area"/>
+        <result column="rp1_date" property="date"/>
+    </resultMap>
+    <sql id="areaSql">
+        id, rp1_user_count, rp1_area, rp1_date
+    </sql>
+    <select id="getAreaReport" resultMap="areaMap">
+        select <include refid="areaSql"/>
+        from sp_report_1
+    </select>
+</mapper>

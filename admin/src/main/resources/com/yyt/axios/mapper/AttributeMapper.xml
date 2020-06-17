@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yyt.axios.mapper.AttributeMapper">
+
+    <sql id="attributeSql">
+        attr_id, attr_name, cat_id, attr_sel, attr_write, attr_vals, delete_time
+    </sql>
+
+    <insert id="addAttribute" keyProperty="attr.attr_id" useGeneratedKeys="true">
+        insert ignore into sp_attribute (attr_name, cat_id, attr_sel, attr_vals)
+        values (#{attr.attr_name}, #{cid}, #{attr.attr_sel}, #{attr.attr_vals})
+    </insert>
+
+    <select id="getAttributeById" resultType="com.yyt.axios.entity.AttributePO">
+        select <include refid="attributeSql"/>
+        from sp_attribute where attr_id = #{id} and delete_time is null
+    </select>
+
+    <select id="getAttributesByCidSel" resultType="com.yyt.axios.entity.AttributePO">
+        select <include refid="attributeSql"/>
+        from sp_attribute
+        where cat_id = #{cid} and attr_sel = #{sel} and delete_time is null
+    </select>
+
+
+
+    <update id="deleteAttribute">
+        update sp_attribute set delete_time  = #{deleteTime} where cat_id = #{cid} and attr_id = #{attrId}
+    </update>
+
+    <update id="updateAttribute">
+        update sp_attribute set attr_name = #{attr.attr_name}
+        <if test="attr.attr_vals != null">
+            , attr_vals = #{attr.attr_vals}
+        </if>
+        where attr_id = #{attrId} and cat_id = #{cid} and attr_sel = #{attr.attr_sel} and delete_time is null
+    </update>
+
+</mapper>

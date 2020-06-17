@@ -1,0 +1,50 @@
+server:
+  port: 80
+
+com:
+  yyt:
+    keys:
+      RSPrivateKey: MIICdgIBADANBgkqhkiG9w0BAQEFAASCAmAwggJcAgEAAoGBANCASiPfP0mt080jbcNsxCSXeCQa4OR7uIGvnKtjKqiWRPLG4EtYXAc24a/hUo6P19eDrVDGlon9/EMG8y+aQFJGjAcGWgYVx5VPHzBX/y7QNyO9MK7QhnXOnrCMbrEGfmPrpKD+r72G9pjant+Qqay9xbpWg0+BAdTUJ/TUMtmZAgMBAAECgYBSozY/Z4FW+31h5fPgK+DFu/8TGFAgXuTvCaJnz2Md9IkZTDejxT6cYWUr53toI5zhvz/XLw6FXNQ54KxMJq/s9PiZYUgq/PMrnyU4gBSTm5BmiWjdaGicVEZ1lofHjpkAchPNW/CzwxD8AeKI7QaObE+EkWbLAi6sa+nRdHKgrQJBAOwYLD2DncU15XCKS0RNzTrNohdBQcisOPHdtQO0CGZlxx3xjuU4WL6/EpdmbjTeYbOSDKCmY5vyVbYZdOWfEs8CQQDiFIwWpvW2WLxLVw3i2P55WmMMXuecwEzg++ae3Ht7nW0zNcWSsyvHh40sM8XqEzmWOzMY6JOePbkuVfWTc4cXAkBRzf5mQhiEoKwjVofF3v9hhKbJT/8vPR1uENgLtHHEqTdZFL3ihqeZUDNs6jz9bKCFy/E8KOsSueEg+6kZdwjZAkEAj2RW4fstd2VasDJb5ViaNqAEmJENOBej60L6KCJR07qqy0M8t+oaR2iLOtDvo6Jj8QxFQXQqRMCDVodAxjANKwJAL3KuaqA6kdy9RxdV3uP8nRXLY7C/1ZIK6U0pyZqKXEwpD+7Ar3hwwhPz9TeuoqjB/cCknZjw70BQFQ0/VUHW2g==
+      RSPublicKey: MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQDQgEoj3z9JrdPNI23DbMQkl3gkGuDke7iBr5yrYyqolkTyxuBLWFwHNuGv4VKOj9fXg61QxpaJ/fxDBvMvmkBSRowHBloGFceVTx8wV/8u0DcjvTCu0IZ1zp6wjG6xBn5j66Sg/q+9hvaY2p7fkKmsvcW6VoNPgQHU1Cf01DLZmQIDAQAB+oXcINOiE3AsuZ4VJmwNZg9Y/7fY+OFRS2JAh5YMsrv2qyoGP+Z9ksre26NYR+Lt91B2lhdwJHLpQpziaANZm/ONb31fj/lwIDAQAB
+      HSPrivateKey: MIIBVAIBADANBgkqhkiG9w0BAQEFAASCAT4wggE6AgEAAkEA1dfnw3BseE1To2s3N6Mij4GnHZMkltOnEiZUtcBreMm+psXjVHiKEmzB3b6RB7DSKjBIDq+CFuuhq6HztwRcpQIDAQABAkEAwZVyebqMd1uJG6czlWpZHxB/+IX72Y5A8G1CwkYvBGf2UChmCvP1Z5oofkSf0zr3e/JYM7IYbfggxydow+G1AQIhAOqOR48EAVdgSxCFL+nBpe639+ACrKWFG60DQ0PAerfHAiEA6WTbb/wf7hbc3AuXFaJwvsGS5l0oXfM5qUTqxQpgQDMCID0Cy1xJB2xJ8NyYOFFOfLHuinxrVassR3mmap25+HHLAiAtX7s9kTGP8wfrC6HKxfLPUwjBGllPsoqCOvC9b9/4ewIgPRNERMD3Wz6jvLb6fNRXCerDmSQAVX3SaSdzVb0xtFM=
+    jwt:
+      type: JWT
+      algorithm: RS256
+    fileUpload:
+      # 限制图片上传单个文件最大大小 3MB
+      fileSizeMax: 3145728
+      # 限制图片上传多个文件最大大小 9MB
+      sizeMax: 9437184
+pagehelper:
+  helper-dialect: mysql
+  reasonable: true
+  support-methods-arguments: true
+
+spring:
+  output:
+    ansi:
+#      彩色日志
+      enabled: detect
+  redis:
+    #Redis服务器地址
+    host: 192.168.10.114
+    #Redis服务器连接端口
+    port: 6379
+    #Redis数据库索引（默认为0）
+    database: 0
+    #Redis服务器连接密码（默认为空）
+    password:
+    #链接超时时间
+    timeout: 10000ms
+    #连接池配置(可使用Jedispool,这里使用lettuce连接池)
+    lettuce:
+      pool:
+        #连接池中的最大空闲连接
+        max-idle: 8
+        #连接池中的最小空闲连接
+        min-idle: 0
+        #连接池最大阻塞等待时间（使用负值表示没有限制,默认-1）
+        max-wait: -1ms
+        #连接池最大连接数（使用负值表示没有限制）
+        max-active: 8
+#debug: true

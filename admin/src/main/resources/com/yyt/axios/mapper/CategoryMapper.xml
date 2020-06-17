@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yyt.axios.mapper.CategoryMapper">
+    <sql id="categorySql">
+        cat_id, cat_name, cat_pid, cat_level, cat_deleted, cat_icon, cat_src
+    </sql>
+
+    <select id="getAllCategories" resultType="com.yyt.axios.entity.CategoryPO">
+        select
+        <include refid="categorySql"/>
+        from sp_category
+    </select>
+
+    <select id="getCategoryByLevel" resultType="com.yyt.axios.entity.CategoryPO">
+        select
+        <include refid="categorySql"/>
+        from sp_category
+        where cat_level = #{level}
+    </select>
+
+    <select id="getCategoryById" resultType="com.yyt.axios.entity.CategoryPO">
+        select
+        <include refid="categorySql"/>
+        from sp_category
+        where cat_id = #{id}
+    </select>
+
+    <insert id="addCategory" keyProperty="id" useGeneratedKeys="true">
+        insert into sp_category (cat_name, cat_pid, cat_level)
+        values (#{cate.cat_name}, #{cate.cat_pid}, #{cate.cat_level})
+    </insert>
+
+    <update id="updateCategory">
+        update sp_category
+        set cat_name = #{name}
+        where cat_id = #{id}
+    </update>
+
+    <delete id="deleteCategory">
+        delete
+        from sp_category
+        where cat_id = #{id}
+    </delete>
+</mapper>
